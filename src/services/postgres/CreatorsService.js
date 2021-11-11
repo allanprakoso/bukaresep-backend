@@ -1,4 +1,10 @@
+const { nanoid } = require('nanoid');
 const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
+
+const NotFoundError = require('../../common/exceptions/NotFoundError');
+const InvariantError = require('../../common/exceptions/InvariantError');
+const AuthenticationError = require('../../common/exceptions/AuthenticationError');
 
 class CreatorsService {
     constructor() {
@@ -8,7 +14,7 @@ class CreatorsService {
     async verifyNewUsername(username) {
         const query = {
             text: 'SELECT id FROM creators WHERE username=$1',
-            values =[username]
+            values: [username]
         };
         const result = await this._pool.query(query);
         if (result.rowCount > 0) {
@@ -16,8 +22,20 @@ class CreatorsService {
         }
     };
 
-    async addCreator(username, password, email, gender, age, front_name, last_name) {
+    async verifyNewEmail(email) {
+        const query = {
+            text: 'SELECT id FROM creators WHERE email=$1',
+            values: [email]
+        };
+        const result = await this._pool.query(query);
+        if (result.rowCount > 0) {
+            throw new InvariantError('Email already exists');
+        }
+    };
+
+    async addCreator({ username, password, email, gender, age, front_name, last_name }) {
         await this.verifyNewUsername(username);
+        await this.verifyNewEmail(email);
         const id = `${nanoid(16)}`;
         const hashedPassword = await bcrypt.hash(password, 10);
 

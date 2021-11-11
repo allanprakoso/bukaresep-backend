@@ -31,14 +31,12 @@ exports.up = pgm => {
         },
         front_name: {
             type: 'VARCHAR(50)',
-            notNull: true,
         },
         last_name: {
             type: 'VARCHAR(50)',
         },
         url_image: {
             type: 'TEXT',
-            notNull: true,
         }
 
     });

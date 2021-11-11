@@ -21,7 +21,12 @@
   },
   "homepage": "https://github.com/allanprakoso/bukaresep-backend#readme",
   "dependencies": {
+    "@hapi/hapi": "^20.2.1",
+    "auto-bind": "^5.0.1",
+    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
+    "joi": "^17.4.2",
+    "nanoid": "^3.1.30",
     "node-pg-migrate": "^6.0.0",
     "nodemon": "^2.0.14",
     "pg": "^8.7.1"

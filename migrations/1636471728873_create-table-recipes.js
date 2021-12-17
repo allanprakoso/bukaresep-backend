@@ -5,10 +5,9 @@ exports.shorthands = undefined;
 exports.up = pgm => {
     pgm.createTable('recipes', {
         id: {
-            type: 'int',
+            type: 'SERIAL',
             notNull: true,
             primaryKey: true,
-            unique: true,
             autoIncrement: true,
         },
         creator_id: {
@@ -18,19 +17,19 @@ exports.up = pgm => {
             onDelete: 'cascade',
         },
         category_id: {
-            type: 'int',
+            type: 'SERIAL',
             notNull: true,
             references: 'categories',
             onDelete: 'cascade',
         },
         cuisine_id: {
-            type: 'int',
+            type: 'SERIAL',
             notNull: true,
             references: 'cuisines',
             onDelete: 'cascade',
         },
         level_id: {
-            type: 'int',
+            type: 'SERIAL',
             notNull: true,
             references: 'levels',
             onDelete: 'cascade',
@@ -47,8 +46,11 @@ exports.up = pgm => {
             type: 'timestamp',
             notNull: true,
         },
-        published_at: {
-            type: 'timestamp',
+        status: {
+            type: 'varchar(20)',
+            notNull: true,
+            default: 'drafted',
+            check: 'status IN (\'drafted\', \'published\', \'archived\', \'deleted\')',
         },
         url_image: {
             type: 'text',
@@ -62,4 +64,6 @@ exports.up = pgm => {
     });
 };
 
-exports.down = pgm => { };
+exports.down = pgm => {
+    pgm.dropTable('recipes');
+ };

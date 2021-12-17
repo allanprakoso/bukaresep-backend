@@ -6,7 +6,7 @@ exports.up = pgm => {
     // create table tags (id int autoincrement primarykey, title)
     pgm.createTable('tags', {
         id: {
-            type: 'integer',
+            type: 'SERIAL',
             primaryKey: true,
             notNull: true,
             autoIncrement: true
@@ -18,4 +18,6 @@ exports.up = pgm => {
     });
 };
 
-exports.down = pgm => {};
+exports.down = pgm => {
+    pgm.dropTable('tags');
+};

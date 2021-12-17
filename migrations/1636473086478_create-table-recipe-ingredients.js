@@ -4,14 +4,18 @@ exports.shorthands = undefined;
 
 exports.up = pgm => {
     pgm.createTable('recipe_ingredients', {
-        recipe_id: {
-            type: 'integer',
-            notNull: true
+        id: {
+            type: 'serial',
+            primaryKey: true
         },
-        ingredient_id: {
-            type: 'integer',
-            notNull: true
+        group_id: {
+            type: 'INTEGER',
+            references: 'group_ingredients',
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
         },
+        name: { type: 'text', notNull: true },
+        description: { type: 'text', notNull: false },
         amount: {
             type: 'float',
             notNull: true
@@ -24,4 +28,6 @@ exports.up = pgm => {
     });
 };
 
-exports.down = pgm => { };
+exports.down = pgm => {
+    pgm.dropTable('recipe_ingredients');
+};

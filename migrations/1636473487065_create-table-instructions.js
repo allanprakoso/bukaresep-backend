@@ -6,10 +6,17 @@ exports.up = pgm => {
     // create table instructions (id int primarykey autoIncrement, step text, instruction text, url_image text null, url_video text null)
     pgm.createTable('instructions', {
         id: {
-            type: 'integer',
+            type: 'SERIAL',
             primaryKey: true,
             notNull: true,
             autoIncrement: true
+        },
+        recipe_id: {
+            type: 'INTEGER',
+            notNull: true,
+            references: 'recipes',
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
         },
         step: {
             type: 'text',
@@ -30,4 +37,7 @@ exports.up = pgm => {
     });
 };
 
-exports.down = pgm => {};
+exports.down = pgm => {
+    // drop table instructions
+    pgm.dropTable('instructions');
+};

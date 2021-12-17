@@ -6,14 +6,14 @@ exports.up = pgm => {
     // create table recipe_tags (recipe_id references recipes, tag_id reference tags)
     pgm.createTable('recipe_tags', {
         recipe_id: {
-            type: 'integer',
+            type: 'int',
             references: 'recipes',
             onDelete: 'cascade',
             onUpdate: 'cascade',
             notNull: true
         },
         tag_id: {
-            type: 'integer',
+            type: 'int',
             references: 'tags',
             onDelete: 'cascade',
             onUpdate: 'cascade',
@@ -21,4 +21,7 @@ exports.up = pgm => {
     });
 };
 
-exports.down = pgm => {};
+exports.down = pgm => {
+    // drop table recipe_tags
+    pgm.dropTable('recipe_tags');
+};

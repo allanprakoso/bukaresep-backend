@@ -1,0 +1,62 @@
+{
+    "name": "SATE KELINCI GORENG",
+    "url_image": "http://ckckkcc.com",
+    "ingredients": [
+        {
+            "group": "Bahan Utama",
+            "ingredients": [
+                {
+                    "name": "Buah Mangga",
+                    "amount": 2,
+                    "unit": 1,
+                    "descriptions": "Di Goreng pake minyak bukan air"
+                },
+                {
+                    "name": "Buah Apel",
+                    "amount": 2,
+                    "unit": 1,
+                    "descriptions": "Di Goreng pake minyak bukan air"
+                }
+            ]
+        },
+        {
+            "group": "Bahan Kulit",
+            "ingredients": [
+                {
+                    "name": "Buah Mangga",
+                    "amount": 2,
+                    "unit": 1,
+                    "descriptions": "Di Goreng pake minyak bukan air"
+                },
+                {
+                    "name": "Buah Apel",
+                    "amount": 2,
+                    "unit": 1,
+                    "descriptions": "Di Goreng pake minyak bukan air"
+                }
+            ]
+        }
+    ],
+    "instructions": [
+        {
+            "step": "Langkah 1",
+            "instructions": "Haluskan AIR dengan minyak",
+            "url_image": "http://ckckkcc.com"
+        },
+        {
+            "step": "Langkah 1",
+            "instructions": "Haluskan AIR dengan minyak",
+            "url_image": "http://ckckkcc.com"
+        }
+    ],
+    "cooking_time": 40,
+    "serving": 4,
+    "category": 1,
+    "cuisine": 1,
+    "level": 1,
+    "tags": [
+        {
+            "title": "masakan"
+        }
+    ]
+}

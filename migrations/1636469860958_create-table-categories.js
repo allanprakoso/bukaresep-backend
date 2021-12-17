@@ -5,7 +5,7 @@ exports.shorthands = undefined;
 exports.up = pgm => {
     pgm.createTable('categories', {
         id: {
-            type: 'int',
+            type: 'SERIAL',
             primaryKey: true,
             notNull: true,
             autoIncrement: true
@@ -18,4 +18,6 @@ exports.up = pgm => {
     });
 };
 
-exports.down = pgm => {};
+exports.down = pgm => {
+    pgm.dropTable('categories');
+};

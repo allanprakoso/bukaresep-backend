@@ -6,7 +6,7 @@ exports.up = pgm => {
     // create table creator_collections (id int, creator_id varchar(50) references creators, name text);
     pgm.createTable('creator_collections', {
         id: {
-            type: 'integer',
+            type: 'SERIAL',
             primaryKey: true,
             notNull: true,
             autoIncrement: true
@@ -23,4 +23,6 @@ exports.up = pgm => {
     });
 };
 
-exports.down = pgm => {};
+exports.down = pgm => {
+    pgm.dropTable('creator_collections');
+};

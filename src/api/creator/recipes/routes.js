@@ -1,23 +1,51 @@
 const routes = (handler) => [
   {
     method: 'POST',
-    path: '/recipes',
+    path: '/creator/recipes',
     handler: handler.createRecipeHandler,
+    options: {
+      auth: 'bukaresep_jwt',
+    },
   },
   {
     method: 'GET',
-    path: '/recipes/{id}',
-    handler: handler.getRecipeById
+    path: '/creator/recipes/{id}',
+    handler: handler.getRecipeById,
+    options: {
+      auth: 'bukaresep_jwt',
+    },
   },
   {
     method: 'PUT',
-    path: '/recipes/{id}',
-    handler: handler.updateRecipeById
+    path: '/creator/recipes/{id}',
+    handler: handler.updateRecipeById,
+    options: {
+      auth: 'bukaresep_jwt',
+    },
   },
   {
     method: 'DELETE',
-    path: '/recipes/{id}',
-    handler: handler.deleteRecipeById
+    path: '/creator/recipes/{id}',
+    handler: handler.deleteRecipeById,
+    options: {
+      auth: 'bukaresep_jwt',
+    },
+  },
+  {
+    method: 'GET',
+    path: '/creator/recipes',
+    handler: handler.getAllRecipesPagination,
+    options: {
+      auth: 'bukaresep_jwt',
+    },
+  },
+  {
+    method: 'GET',
+    path: '/creator/recipes/search',
+    handler: handler.searchRecipes,
+    options: {
+      auth: 'bukaresep_jwt',
+    },
   }
 ];
 

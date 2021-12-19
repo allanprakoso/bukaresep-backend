@@ -1,6 +1,7 @@
 const { Pool } = require('pg');
 
 const NotFoundError = require('../../common/exceptions/NotFoundError');
+const InvariantError = require('../../common/exceptions/InvariantError');
 const LevelsService = require('./LevelsService');
 const CategoriesService = require('./CategoriesService');
 const CuisinesService = require('./CuisinesService');
@@ -20,7 +21,7 @@ class RecipesService {
         const {
             name,
             url_image,
-            ingredients,
+            group_ingredients,
             instructions,
             cooking_time,
             category_id,
@@ -39,7 +40,7 @@ class RecipesService {
 
         const recipe_id = result.rows[0].id;
 
-        for (const data of ingredients) {
+        for (const data of group_ingredients) {
             const grup = data.group;
             const group_id = await this.addGroupIngredients(recipe_id, grup);
             for (const ingredient of data.ingredients) {
@@ -106,26 +107,32 @@ class RecipesService {
     }
 
     //? Read Recipe
-
-    async getAllRecipes() {
+    async verifyRecipeOwner(recipe_id, user_id) {
         const query = {
-            text: 'SELECT * FROM recipes',
+            text: 'SELECT * FROM recipes WHERE id = $1 AND creator_id = $2',
+            values: [recipe_id, user_id],
         };
         const result = await this._pool.query(query);
-        return result.rows;
+        if (!result.rowCount) {
+            throw new InvariantError('invalid recipe owner');
+        }
     }
 
-    async getRecipesPagination(page) {
+    async getRecipesPagination(creator_id,{page = 1}) {
         const limit = 10;
         const query = {
-            text: 'SELECT * FROM recipes ORDER BY created_at DESC LIMIT $1 OFFSET $2',
-            values: [limit, page * limit],
+            text: 'SELECT recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories .id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE creator_id = $3 ORDER BY created_at DESC LIMIT $1 OFFSET $2',
+            values: [limit, (page - 1) * limit, creator_id],
         };
         const result = await this._pool.query(query);
+        if (result.rows.length <= 0) {
+            throw new NotFoundError('Recipes not found');
+        }
         return result.rows;
     }
 
-    async getRecipeById(id) {
+    async getRecipeById(creator_id, id) {
+        await this.verifyRecipeOwner(id, creator_id);
         const recipeDetails = ({ id, name, url_image, cooking_time, serving, created_at, updated_at, status }, group_ingredients, instructions, category, cuisine, level, tags) => ({
             id, name, url_image, created_at, updated_at, status, group_ingredients, instructions, cooking_time, serving, category, cuisine, level, tags
         });
@@ -158,7 +165,7 @@ class RecipesService {
         for (const data of result.rows) {
             const group_id = data.id;
             const ingredients = await this.getRecipeIngredients(group_id);
-            _ingredients.push({ id:group_id, group: data.name, ingredients: ingredients });
+            _ingredients.push({ id: group_id, group: data.name, ingredients: ingredients });
         }
         return _ingredients;
     }
@@ -192,13 +199,14 @@ class RecipesService {
 
     //? Update Recipe
 
-    async updateRecipe(recipe){
+    async updateRecipe(creator_id, recipe, recipe_id) {
+        await this.verifyRecipeOwner(recipe_id, creator_id);
         const updated_at = new Date();
-        const {group_ingredients, instructions, tags } = recipe;
+        const { group_ingredients, instructions, tags } = recipe;
 
         const queryRecipe = {
-            text: 'UPDATE recipes SET name = $1, url_image = $2, cooking_time = $3, serving = $4, updated_at = $5, status = $6, category_id=$7, cuisine_id=$8,level_id=$9 WHERE id = $10',
-            values: [recipe.name, recipe.url_image, recipe.cooking_time, recipe.serving, updated_at, recipe.status,recipe.category_id,recipe.cuisine_id,recipe.level_id, recipe.id],
+            text: 'UPDATE recipes SET name = $1, url_image = $2, cooking_time = $3, serving = $4, updated_at = $5, category_id=$6, cuisine_id=$7,level_id=$8 WHERE id = $9',
+            values: [recipe.name, recipe.url_image, recipe.cooking_time, recipe.serving, updated_at, recipe.category_id, recipe.cuisine_id, recipe.level_id, recipe_id],
         };
         await this._pool.query(queryRecipe);
 
@@ -223,9 +231,10 @@ class RecipesService {
                 values: [instruction.step, instruction.instruction, instruction.url_image, instruction.url_video, instruction.id]
             };
             await this._pool.query(queryInstruction);
-        }        
+        }
     }
-    async updateStatusRecipe({id, status}) {
+    async updateStatusRecipe(creator_id,{ id, status }) {
+        await this.verifyRecipeOwner(id, creator_id);
         const updated_at = new Date();
         const query = {
             text: 'UPDATE recipes SET status = $1, updated_at = $2 WHERE id = $3',
@@ -235,12 +244,32 @@ class RecipesService {
     }
 
     //? Delete Recipe
-    async deleteRecipe(id){
+    async deleteRecipe(creator_id,id) {
+        await this.verifyRecipeOwner(id, creator_id);
         const query = {
             text: 'DELETE FROM recipes WHERE id = $1',
             values: [id],
         };
         await this._pool.query(query);
+    }
+
+    async filteringRecipe(creator_id,{keyword, category, cuisine, level, time}) {
+        var addtionalQuery = '';
+        const qCategory = ' AND category_id=' + category + ' ';
+        const qCuisine = 'AND cuisine_id=' + cuisine + ' ';
+        const qLevel = 'AND level_id=' + level + ' ';
+        const qCooking = 'AND cooking_time<=' + time + ' ';
+        if (category !== undefined) addtionalQuery += qCategory;
+        if (cuisine !== undefined) addtionalQuery += qCuisine;
+        if (level !== undefined) addaddtionalQuery += qLevel;
+        if (time !== undefined) addtionalQuery += qCooking;
+
+        const query = {
+            text: `SELECT * FROM recipes WHERE creator_id=$1 AND name ILIKE '%' || $2 || '%' ${addtionalQuery}`,
+            values: [creator_id,keyword],
+        };
+        const result = await this._pool.query(query);
+        return result.rows;
     }
 }
 

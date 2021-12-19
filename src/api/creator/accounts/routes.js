@@ -13,6 +13,9 @@ const routes = (handler) => [
     method: 'PUT',
     path: '/creators/{id}',
     handler: handler.updateCreatorHandler,
+    options: {
+      auth: 'bukaresep_jwt',
+    },
   },
 ];
 

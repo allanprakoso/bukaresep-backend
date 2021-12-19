@@ -1,5 +1,6 @@
 require('dotenv').config();
 const Hapi = require('@hapi/hapi');
+const Jwt = require('@hapi/jwt');
 const Inert = require('@hapi/inert');
 const path = require('path');
 
@@ -23,6 +24,9 @@ const UnitService = require('./services/postgres/UnitService');
 
 const ingredients = require('./api/admin/ingredients');
 const IngredientsService = require('./services/postgres/IngredientsService');
+
+const creatorCollections = require('./api/creator/collections');
+const CreatorCollectionService =require('./services/postgres/CreatorCollectionsService');
 //
 
 // uploads
@@ -33,9 +37,18 @@ const UploadsValidator = require('./validator/uploads');
 const recipes = require('./api/creator/recipes');
 const RecipesService = require('./services/postgres/RecipesService');
 
+
+// authentications
+const creatorAuthentications = require('./api/creator/authentications');
+const CreatorAuthenticationService = require('./services/postgres/CreatorAuthenticationService');
+const TokenManager = require('./common/tokenize/TokenManager');
+
 const init = async () => {
+  //? CREATOR
+  const creatorAuthenticationsService = new CreatorAuthenticationService();
   const creatorsService = new CreatorsService();
   const recipesService = new RecipesService();
+  const creatorCollectionService = new CreatorCollectionService();
 
   // ? ADMIN
   const cuisinesService = new CuisinesService();
@@ -59,15 +72,51 @@ const init = async () => {
   });
   await server.register([
     {
+      plugin: Jwt,
+    },
+    {
       plugin: Inert,
     },
   ]);
 
-  await server.register([{
+  server.auth.strategy('bukaresep_jwt', 'jwt', {
+    keys: process.env.ACCESS_TOKEN_KEY,
+    verify: {
+      aud: false,
+      iss: false,
+      sub: false,
+      maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+    },
+    validate: (artifacts) => ({
+      isValid: true,
+      credentials: {
+        id: artifacts.decoded.payload.id,
+      },
+    }),
+  });
+
+
+  await server.register([
+    {
+      plugin: creatorAuthentications,
+      options: {
+        authenticationsService: creatorAuthenticationsService,
+        creatorsService: creatorsService,
+        tokenManager: TokenManager,
+      }
+    }
+    ,
+    {
     plugin: creators,
     options: {
       service: creatorsService,
       validator: creatorsValidator,
+    },
+  },
+  {
+    plugin: creatorCollections,
+    options: {
+      service: creatorCollectionService,
     },
   },
   {

@@ -7,8 +7,8 @@ class RecipeHandler {
   }
 
   async createRecipeHandler(request, h) {
-    const idCreator = 'LIylAM7Pgkdf358w';
-    const recipe_id = await this.service.addRecipe(idCreator, request.payload);
+    const { id: credentialId } = request.auth.credentials;
+    const recipe_id = await this.service.addRecipe(credentialId, request.payload);
     const response = h.response({
       status: 'success',
       message: 'recipe created successfully',
@@ -18,15 +18,19 @@ class RecipeHandler {
     return response;
   }
 
-  async getRecipeById(request, h){
-    const recipe = await this.service.getRecipeById(request.params.id);
-    const response = h.response({recipe});
+  async getRecipeById(request, h) {
+    const { id: credentialId } = request.auth.credentials;
+    const recipe = await this.service.getRecipeById(credentialId,request.params.id);
+    const response = h.response({ recipe });
     response.code(200);
     return response;
   }
 
-  async updateRecipeById(request, h){
-    await this.service.updateRecipe(request.payload);
+  async updateRecipeById(request, h) {
+    const { id: credentialId } = request.auth.credentials;
+    const recipe_id = request.params.id;
+
+    await this.service.updateRecipe(credentialId,request.payload, recipe_id);
     const response = h.response({
       status: 'success',
       message: 'recipe updated successfully',
@@ -35,11 +39,37 @@ class RecipeHandler {
     return response;
   }
 
-  async deleteRecipeById(request, h){
-    await this.service.deleteRecipe(request.params.id);
+  async deleteRecipeById(request, h) {
+    const { id: credentialId } = request.auth.credentials;
+    await this.service.deleteRecipe(credentialId,request.params.id);
     const response = h.response({
       status: 'success',
       message: 'recipe deleted successfully',
+    });
+    response.code(200);
+    return response;
+  }
+
+  async getAllRecipesPagination(request, h) {
+    const { id: credentialId } = request.auth.credentials;
+    const recipes = await this.service.getRecipesPagination(credentialId,request.query);
+    const response = h.response({
+      status: 'success',
+      message: 'recipes retrieved successfully',
+      page: request.query.page ?? 1,
+      results: recipes,
+    });
+    response.code(200);
+    return response;
+  }
+
+  async searchRecipes(request, h) {
+    const { id: credentialId } = request.auth.credentials;
+    const recipes = await this.service.filteringRecipe(credentialId,request.query);
+    const response = h.response({
+      status: 'success',
+      message: 'recipes retrieved successfully',
+      results: recipes,
     });
     response.code(200);
     return response;

@@ -19,8 +19,7 @@ class RecipeHandler {
   }
 
   async getRecipeById(request, h) {
-    const { id: credentialId } = request.auth.credentials;
-    const recipe = await this.service.getRecipeById(credentialId,request.params.id);
+    const recipe = await this.service.getRecipeById(request.params.id);
     const response = h.response({ recipe });
     response.code(200);
     return response;

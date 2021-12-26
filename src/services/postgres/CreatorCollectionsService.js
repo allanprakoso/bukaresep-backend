@@ -49,10 +49,10 @@ class CreatorCollectionService {
         return result.rows[0];
     }
     
-    async getCollectionById(id, creator_id) {
+    async getCollectionById(id) {
         const query = {
-        text: 'SELECT * FROM creator_collections WHERE id = $1 AND creator_id = $2',
-        values: [id, creator_id],
+        text: 'SELECT * FROM creator_collections WHERE id = $1',
+        values: [id],
         };
     
         const result = await this._pool.query(query);
@@ -63,7 +63,6 @@ class CreatorCollectionService {
     }
     
     async getCollections(creator_id) {
-        await this.verifyCollectionsOwner({creator_id});
         const query = {
         text: 'SELECT * FROM creator_collections WHERE creator_id = $1',
         values: [creator_id],
@@ -126,8 +125,7 @@ class CreatorCollectionService {
         }
     }
 
-    async getRecipesByCollectionId(creator_id,id){
-        await this.verifyCollectionsOwner({creator_id, collection_id:id});
+    async getRecipesByCollectionId(id){
         const query = {
             text: 'SELECT recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM items_creator_collection INNER JOIN recipes ON items_creator_collection.recipe_id=recipes.id INNER JOIN categories ON recipes.category_id=categories.id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE creator_collection_id = $1 ORDER BY created_at DESC',
             values: [id],

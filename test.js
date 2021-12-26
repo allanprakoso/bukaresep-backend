@@ -1,4 +1,5 @@
 require('dotenv').config();
+const bcrypt = require('bcrypt');
 const RecipesService = require("./src/services/postgres/RecipesService");
 
 const mapToIngredientModel = (recipe_id, group_id, { name, unit, amount, description }) =>
@@ -12,12 +13,10 @@ const mapToIngredientModel = (recipe_id, group_id, { name, unit, amount, descrip
 })
 
 const init = async () => {
-    const recipesService = new RecipesService();
-        
-    const idCreator = "LIylAM7Pgkdf358w";
-    const id_recipe = await recipesService.updateRecipe(payload);
-    console.log(id_recipe);
 
+    const hashedPassword = await bcrypt.hash('aksestokennyasiuynilho', 10);
+
+    console.log(hashedPassword);
 }
 
 

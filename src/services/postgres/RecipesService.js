@@ -9,7 +9,7 @@ const UnitService = require('./UnitService');
 
 class RecipesService {
     constructor() {
-        this._pool = new Pool();
+        this._pool = new Pool(); 
         this.levelsService = new LevelsService();
         this.categoriesService = new CategoriesService();
         this.cuisinesService = new CuisinesService();
@@ -131,8 +131,7 @@ class RecipesService {
         return result.rows;
     }
 
-    async getRecipeById(creator_id, id) {
-        await this.verifyRecipeOwner(id, creator_id);
+    async getRecipeById(id) {
         const recipeDetails = ({ id, name, url_image, cooking_time, serving, created_at, updated_at, status }, group_ingredients, instructions, category, cuisine, level, tags) => ({
             id, name, url_image, created_at, updated_at, status, group_ingredients, instructions, cooking_time, serving, category, cuisine, level, tags
         });
@@ -266,6 +265,41 @@ class RecipesService {
 
         const query = {
             text: `SELECT * FROM recipes WHERE creator_id=$1 AND name ILIKE '%' || $2 || '%' ${addtionalQuery}`,
+            values: [creator_id,keyword],
+        };
+        const result = await this._pool.query(query);
+        return result.rows;
+    }
+
+
+    //? Recipe User
+
+    async getRecipesUsers({page = 1}) {
+        const limit = 10;
+        const query = {
+            text: 'SELECT recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories .id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id ORDER BY created_at DESC LIMIT $1 OFFSET $2',
+            values: [limit, (page - 1) * limit],
+        };
+        const result = await this._pool.query(query);
+        if (result.rows.length <= 0) {
+            throw new NotFoundError('Recipes not found');
+        }
+        return result.rows;
+    }
+
+    async userFilteringRecipe({keyword, category, cuisine, level, time}){
+        var addtionalQuery = '';
+        const qCategory = ' AND category_id=' + category + ' ';
+        const qCuisine = 'AND cuisine_id=' + cuisine + ' ';
+        const qLevel = 'AND level_id=' + level + ' ';
+        const qCooking = 'AND cooking_time<=' + time + ' ';
+        if (category !== undefined) addtionalQuery += qCategory;
+        if (cuisine !== undefined) addtionalQuery += qCuisine;
+        if (level !== undefined) addaddtionalQuery += qLevel;
+        if (time !== undefined) addtionalQuery += qCooking;
+
+        const query = {
+            text: `SELECT * FROM recipes WHERE name ILIKE '%' || $2 || '%' ${addtionalQuery}`,
             values: [creator_id,keyword],
         };
         const result = await this._pool.query(query);

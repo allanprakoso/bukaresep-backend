@@ -82,7 +82,7 @@ class CreatorsService {
 
   async verifyCreatorCredentials(username, password) {
     const query = {
-      text: 'SELECT * FROM creators WHERE username=$1',
+      text: 'SELECT * FROM creators WHERE username=$1 OR email=$1',
       values: [username],
     };
 

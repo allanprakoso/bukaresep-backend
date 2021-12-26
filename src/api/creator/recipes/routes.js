@@ -5,6 +5,9 @@ const routes = (handler) => [
     handler: handler.createRecipeHandler,
     options: {
       auth: 'bukaresep_jwt',
+      description: 'Post recipe details',
+      notes: 'Returns id',
+      tags: ['api'],
     },
   },
   {
@@ -13,6 +16,9 @@ const routes = (handler) => [
     handler: handler.getRecipeById,
     options: {
       auth: 'bukaresep_jwt',
+      description: 'Get recipe details',
+      notes: 'Returns detail recipe',
+      tags: ['api'],
     },
   },
   {
@@ -21,6 +27,9 @@ const routes = (handler) => [
     handler: handler.updateRecipeById,
     options: {
       auth: 'bukaresep_jwt',
+      description: 'Edit recipe details',
+      notes: 'Returns information',
+      tags: ['api'],
     },
   },
   {
@@ -29,6 +38,9 @@ const routes = (handler) => [
     handler: handler.deleteRecipeById,
     options: {
       auth: 'bukaresep_jwt',
+      description: 'Delete recipe',
+      notes: 'Returns information',
+      tags: ['api'],
     },
   },
   {
@@ -37,6 +49,9 @@ const routes = (handler) => [
     handler: handler.getAllRecipesPagination,
     options: {
       auth: 'bukaresep_jwt',
+      description: 'Get recipes',
+      notes: 'Returns List Recipe pagination',
+      tags: ['api'],
     },
   },
   {
@@ -45,6 +60,9 @@ const routes = (handler) => [
     handler: handler.searchRecipes,
     options: {
       auth: 'bukaresep_jwt',
+      description: 'Search recipes',
+      notes: 'Returns List Recipe pagination',
+      tags: ['api'],
     },
   }
 ];

@@ -13,10 +13,10 @@ const mapToIngredientModel = (recipe_id, group_id, { name, unit, amount, descrip
 })
 
 const init = async () => {
+    const recipesService = new RecipesService();
+    const collections = await recipesService.getTest('LIylAM7Pgkdf358w');
 
-    const hashedPassword = await bcrypt.hash('aksestokennyasiuynilho', 10);
-
-    console.log(hashedPassword);
+    console.log(collections);
 }
 
 

@@ -29,7 +29,7 @@ class RecipeHandler {
     const { id: credentialId } = request.auth.credentials;
     const recipe_id = request.params.id;
 
-    await this.service.updateRecipe(credentialId,request.payload, recipe_id);
+    await this.service.updateRecipe(credentialId, request.payload, recipe_id);
     const response = h.response({
       status: 'success',
       message: 'recipe updated successfully',
@@ -40,7 +40,7 @@ class RecipeHandler {
 
   async deleteRecipeById(request, h) {
     const { id: credentialId } = request.auth.credentials;
-    await this.service.deleteRecipe(credentialId,request.params.id);
+    await this.service.deleteRecipe(credentialId, request.params.id);
     const response = h.response({
       status: 'success',
       message: 'recipe deleted successfully',
@@ -51,7 +51,20 @@ class RecipeHandler {
 
   async getAllRecipesPagination(request, h) {
     const { id: credentialId } = request.auth.credentials;
-    const recipes = await this.service.getRecipesPagination(credentialId,request.query);
+    const recipes = await this.service.getRecipesPagination(credentialId, request.query);
+    const response = h.response({
+      status: 'success',
+      message: 'recipes retrieved successfully',
+      page: request.query.page ?? 1,
+      results: recipes,
+    });
+    response.code(200);
+    return response;
+  }
+
+  async getRecipesDrafted(request, h) {
+    const { id: credentialId } = request.auth.credentials;
+    const recipes = await this.service.getRecipesDrafted(credentialId);
     const response = h.response({
       status: 'success',
       message: 'recipes retrieved successfully',
@@ -64,7 +77,7 @@ class RecipeHandler {
 
   async searchRecipes(request, h) {
     const { id: credentialId } = request.auth.credentials;
-    const recipes = await this.service.filteringRecipe(credentialId,request.query);
+    const recipes = await this.service.filteringRecipe(credentialId, request.query);
     const response = h.response({
       status: 'success',
       message: 'recipes retrieved successfully',

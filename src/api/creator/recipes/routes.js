@@ -12,6 +12,17 @@ const routes = (handler) => [
   },
   {
     method: 'GET',
+    path: '/creator/recipes/drafts',
+    handler: handler.getRecipesDrafted,
+    options: {
+      auth: 'bukaresep_jwt',
+      description: 'Get recipe drafts',
+      notes: 'Returns drafts recipe',
+      tags: ['api'],
+    },
+  },
+  {
+    method: 'GET',
     path: '/creator/recipes/{id}',
     handler: handler.getRecipeById,
     options: {

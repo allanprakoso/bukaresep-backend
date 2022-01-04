@@ -82,7 +82,7 @@ class CreatorsService {
 
   async verifyCreatorCredentials(username, password) {
     const query = {
-      text: 'SELECT * FROM creators WHERE username=$1 OR email=$1',
+      text: 'SELECT id, username, url_image FROM creators WHERE username=$1 OR email=$1',
       values: [username],
     };
 
@@ -95,7 +95,7 @@ class CreatorsService {
     if (!isValid) {
       throw new AuthenticationError('Invalid password');
     }
-    return result.rows[0].id;
+    return result.rows[0];
   }
 }
 

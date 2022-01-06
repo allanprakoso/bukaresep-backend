@@ -89,7 +89,7 @@ class UsersService {
         if (!isPasswordValid) {
             throw new AuthenticationError('Invalid password');
         }
-        return user;
+        return user.id;
     }
 }
 

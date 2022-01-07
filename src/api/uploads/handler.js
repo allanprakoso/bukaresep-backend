@@ -20,7 +20,7 @@ class UploadsHandler {
     const response = h.response({
       status: 'success',
       data: {
-        pictureUrl: `http://${process.env.HOST}:${process.env.PORT}/recipe/${result}`,
+        pictureUrl: `http://${process.env.IMAGE_URL}/recipe/${result}`,
       },
     });
     response.code(201);
@@ -37,7 +37,7 @@ class UploadsHandler {
     const response = h.response({
       status: 'success',
       data: {
-        pictureUrl: `http://${process.env.HOST}:${process.env.PORT}/profile/${result}`,
+        pictureUrl: `http://${process.env.IMAGE_URL}/profile/${result}`,
       },
     });
     response.code(201);

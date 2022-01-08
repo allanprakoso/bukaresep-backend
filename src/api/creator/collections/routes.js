@@ -9,18 +9,9 @@ const routes = (handler) => [
             auth: 'bukaresep_jwt',
             description: 'Get creator collections',
             notes: 'Returns a list collections',
-            tags: ['api'],
-            response: {
-                schema: Joi.object({
-                    collections: Joi.array().items(Joi.object({
-                        id: Joi.number().example(1),
-                        name: Joi.string().example('Masakan Enak'),
-                        creator_id: Joi.string().example('QIWOOiuy71OU'),})
-                        )
-                }),
-              },
+            tags: ['api']
         },
-        
+
     },
     {
         method: 'GET',
@@ -42,12 +33,6 @@ const routes = (handler) => [
             description: 'Get creator collections',
             notes: 'Returns a list collections',
             tags: ['api'],
-            validate: {
-                payload:
-                    Joi.object({
-                        name: Joi.string().min(5).required(),
-                    })
-            }
         },
     },
     {
@@ -59,12 +44,6 @@ const routes = (handler) => [
             description: 'Edit creator collections',
             notes: 'Return status and message',
             tags: ['api'],
-            validate: {
-                payload:
-                    Joi.object({
-                        name: Joi.string().min(5).required(),
-                    })
-            }
         },
     },
     {
@@ -98,12 +77,6 @@ const routes = (handler) => [
             description: 'Get creator collections',
             notes: 'Returns a list collections',
             tags: ['api'],
-            validate: {
-                payload:
-                    Joi.object({
-                        recipe_id: Joi.number().required(),
-                    })
-            }
         },
     },
     {

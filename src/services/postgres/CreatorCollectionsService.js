@@ -73,9 +73,18 @@ class CreatorCollectionService {
             id, name, images, categories
         });
         let collections = [];
-       return  result.rows
-        }
+        result.rows.forEach(collection => {
+            let categories = [];
+            collection.categories.forEach((key, i) => {
+                categories.push({ name: key, count: +collection.count[i] })
+            }
+            )
+            collections.push(collectionModel(collection, categories));
+        })
 
+        return collections;
+    }
+    
     async deleteCollection({ collection_id, creator_id }) {
         await this.verifyCollectionsOwner({ creator_id, collection_id });
         const query = {

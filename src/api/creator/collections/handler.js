@@ -19,9 +19,9 @@ class CollectionsHandler {
     }
 
     async updateCollectionHandler(request, h) {
-        const { id: credentialId} = request.auth.credentials;
+        const { id: credentialId } = request.auth.credentials;
         const collection_id = request.params.id;
-        const collection = await this.service.updateCollection({collection_id, creator_id: credentialId }, request.payload);
+        const collection = await this.service.updateCollection({ collection_id, creator_id: credentialId }, request.payload);
         const response = h.response({
             status: 'success',
             message: 'collection updated successfully',
@@ -32,9 +32,9 @@ class CollectionsHandler {
     }
 
     async getCollectionByIdHandler(request, h) {
-        const { id: credentialId} = request.auth.credentials;
+        const { id: credentialId } = request.auth.credentials;
         const collection = await this.service.getCollectionById(request.params.id);
-        const response = h.response({collection});
+        const response = h.response({ collection });
         response.code(200);
         return response;
     }
@@ -54,7 +54,7 @@ class CollectionsHandler {
     async getAllCollectionsHandler(request, h) {
         const { id: credentialId } = request.auth.credentials;
         const collections = await this.service.getCollections(credentialId);
-        const response = h.response({collections});
+        const response = h.response({ collections });
         response.code(200);
         return response;
     }
@@ -62,17 +62,17 @@ class CollectionsHandler {
     async getRecipesByCollectionIdHandler(request, h) {
         const collection_id = request.params.id;
         const recipes = await this.service.getRecipesByCollectionId(collection_id);
-        const response = h.response({recipes});
+        const response = h.response({ recipes });
         response.code(200);
         return response;
     }
 
     async addRecipeToCollectionHandler(request, h) {
-        const { id: credentialId} = request.auth.credentials;
+        const { id: credentialId } = request.auth.credentials;
         const collection_id = request.params.id;
         const recipe_id = request.payload.recipe_id;
-        
-        await this.service.addRecipeToCollection({collection_id, recipe_id, creator_id:credentialId});
+
+        await this.service.addRecipeToCollection({ collection_id, recipe_id, creator_id: credentialId });
         const response = h.response({
             status: 'success',
             message: 'recipe added to collection successfully',
@@ -85,8 +85,8 @@ class CollectionsHandler {
         const { id: credentialId } = request.auth.credentials;
         const collection_id = request.params.id;
         const recipe_id = request.params.recipe_id;
-        
-        await this.service.removeRecipeFromCollection({collection_id, recipe_id, creator_id:credentialId});
+
+        await this.service.removeRecipeFromCollection({ collection_id, recipe_id, creator_id: credentialId });
         const response = h.response({
             status: 'success',
             message: 'recipe removed from collection successfully',

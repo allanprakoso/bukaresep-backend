@@ -8,6 +8,7 @@ const routes = (handler) => [
     options: {
       payload: {
         allow: 'multipart/form-data',
+        maxBytes: 1000 * 1000 * 5,
         multipart: true,
         output: 'stream',
       },
@@ -19,6 +20,7 @@ const routes = (handler) => [
     handler: handler.postProfilePictureHandler,
     options: {
       payload: {
+        maxBytes: 1000 * 1000 * 5,
         allow: 'multipart/form-data',
         multipart: true,
         output: 'stream',

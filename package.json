@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/allanprakoso/bukaresep-backend#readme",
   "dependencies": {
-    "@hapi/hapi": "^20.0.0",
+    "@hapi/hapi": "^20.2.1",
     "@hapi/inert": "^6.0.4",
     "@hapi/joi": "^17.1.1",
     "@hapi/jwt": "^2.1.0",

@@ -101,7 +101,7 @@ const routes = (handler) => [
             validate: {
                 payload:
                     Joi.object({
-                        recipes_id: Joi.number().required(),
+                        recipe_id: Joi.number().required(),
                     })
             }
         },

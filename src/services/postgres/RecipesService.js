@@ -118,11 +118,10 @@ class RecipesService {
         }
     }
 
-    async getRecipesPagination(creator_id, { page = 1 }) {
-        const limit = 10;
+    async getRecipesPagination(creator_id) {
         const query = {
-            text: 'SELECT recipes.id, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories .id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE creator_id = $3 ORDER BY created_at DESC LIMIT $1 OFFSET $2',
-            values: [limit, (page - 1) * limit, creator_id],
+            text: 'SELECT recipes.id, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories .id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE creator_id = $1 AND status=\'published\' ORDER BY created_at DESC',
+            values: [creator_id],
         };
         const result = await this._pool.query(query);
         if (result.rows.length <= 0) {
@@ -131,11 +130,10 @@ class RecipesService {
         return result.rows;
     }
 
-    async getRecipesDrafted(creator_id, { page = 1 }) {
-        const limit = 10;
+    async getRecipesDrafted(creator_id) {
         const query = {
-            text: 'SELECT recipes.id, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories .id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE creator_id = $3 AND status=\'drafted\' ORDER BY created_at DESC LIMIT $1 OFFSET $2',
-            values: [limit, (page - 1) * limit, creator_id],
+            text: 'SELECT recipes.id, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories .id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE creator_id = $1 AND status=\'drafted\' ORDER BY created_at',
+            values: [creator_id],
         };
         const result = await this._pool.query(query);
         if (result.rows.length <= 0) {

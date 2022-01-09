@@ -53,6 +53,13 @@ class CollectionsHandler {
 
     async getAllCollectionsHandler(request, h) {
         const { id: credentialId } = request.auth.credentials;
+        const { name } = request.query;
+        if (name) {
+            const collections = await this.service.getCollectionsName();
+            const response = h.response({ collections });
+            response.code(200);
+            return response;
+        }
         const collections = await this.service.getCollections(credentialId);
         const response = h.response({ collections });
         response.code(200);

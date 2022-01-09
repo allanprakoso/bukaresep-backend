@@ -68,7 +68,6 @@ class RecipeHandler {
     const response = h.response({
       status: 'success',
       message: 'recipes retrieved successfully',
-      page: request.query.page ?? 1,
       results: recipes,
     });
     response.code(200);

@@ -84,7 +84,15 @@ class CreatorCollectionService {
 
         return collections;
     }
-    
+
+    async getCollectionsName() {
+        const query = {
+            text: 'SELECT id,name FROM creator_collections',
+        };
+        const result = await this._pool.query(query);
+        return result.rows;
+    }
+
     async deleteCollection({ collection_id, creator_id }) {
         await this.verifyCollectionsOwner({ creator_id, collection_id });
         const query = {

@@ -153,6 +153,7 @@ class RecipesService {
             values: [id],
         };
         const result = await this._pool.query(query);
+        console.log(result)
         if (result.rows.length === 0) {
             throw new NotFoundError('Recipe not found');
         }

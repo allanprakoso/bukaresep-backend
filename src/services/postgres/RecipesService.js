@@ -29,12 +29,13 @@ class RecipesService {
             cuisine_id,
             level_id,
             tags,
+            status,
         } = payload;
         const created_at = new Date();
         const updated_at = created_at;
         const query = {
-            text: 'INSERT INTO recipes (creator_id,name,url_image,cooking_time,category_id,serving,cuisine_id,level_id,created_at,updated_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id',
-            values: [idCreator, name, url_image, cooking_time, category_id, serving, cuisine_id, level_id, created_at, updated_at],
+            text: 'INSERT INTO recipes (creator_id,name,url_image,cooking_time,category_id,serving,cuisine_id,level_id,created_at,updated_at,status) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning id',
+            values: [idCreator, name, url_image, cooking_time, category_id, serving, cuisine_id, level_id, created_at, updated_at, status],
         };
         const result = await this._pool.query(query);
 
@@ -143,12 +144,12 @@ class RecipesService {
     }
 
     async getRecipeById(id) {
-        const recipeDetails = ({ id, name, url_image, cooking_time, serving, created_at, updated_at, status }, group_ingredients, instructions, category, cuisine, level, tags) => ({
-            id, name, url_image, created_at, updated_at, status, group_ingredients, instructions, cooking_time, serving, category, cuisine, level, tags
+        const recipeDetails = ({ id, name, url_image, cooking_time, serving, created_at, updated_at, status, creator }, group_ingredients, instructions, category, cuisine, level, tags) => ({
+            id, name, url_image, created_at, creator, updated_at, status, group_ingredients, instructions, cooking_time, serving, category, cuisine, level, tags
         });
 
         const query = {
-            text: 'SELECT * FROM recipes WHERE id = $1',
+            text: 'SELECT recipes.id , name, url_image, cooking_time, serving, created_at, updated_at, status, creators.username as creator FROM recipes INNER JOIN creator ON recipes.creator_id = creators.id WHERE recipes.id = $1',
             values: [id],
         };
         const result = await this._pool.query(query);
@@ -286,7 +287,7 @@ class RecipesService {
     async getRecipesUsers({ page = 1 }) {
         const limit = 10;
         const query = {
-            text: 'SELECT recipes.id, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories .id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id ORDER BY created_at DESC LIMIT $1 OFFSET $2',
+            text: 'SELECT recipes.id, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories .id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE status=\'published\' ORDER BY created_at DESC LIMIT $1 OFFSET $2',
             values: [limit, (page - 1) * limit],
         };
         const result = await this._pool.query(query);

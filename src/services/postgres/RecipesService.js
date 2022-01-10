@@ -149,7 +149,7 @@ class RecipesService {
         });
 
         const query = {
-            text: 'SELECT recipes.id , name, url_image, cooking_time, serving, created_at, updated_at, status, creators.username as creator FROM recipes INNER JOIN creator ON recipes.creator_id = creators.id WHERE recipes.id = $1',
+            text: 'SELECT recipes.id, name, url_image, cooking_time, serving, created_at, updated_at, status, creators.username as creator FROM recipes INNER JOIN creators ON recipes.creator_id = creators.id WHERE recipes.id = $1',
             values: [id],
         };
         const result = await this._pool.query(query);

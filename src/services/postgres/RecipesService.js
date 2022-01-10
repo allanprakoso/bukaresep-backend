@@ -149,11 +149,10 @@ class RecipesService {
         });
 
         const query = {
-            text: 'SELECT recipes.id, recipes.name, recipes.url_image, cooking_time, serving, created_at, updated_at, status, creators.username as creator FROM recipes INNER JOIN creators ON recipes.creator_id = creators.id WHERE recipes.id = $1',
+            text: 'SELECT category_id, cuisine_id, level_id, recipes.id as id, recipes.name as name, recipes.url_image as url_image, cooking_time, serving, created_at, updated_at, status, creators.username as creator FROM recipes INNER JOIN creators ON recipes.creator_id = creators.id WHERE recipes.id = $1',
             values: [id],
         };
         const result = await this._pool.query(query);
-        console.log(result)
         if (result.rows.length === 0) {
             throw new NotFoundError('Recipe not found');
         }

@@ -65,7 +65,7 @@ class UsersService {
 
     async getUserById(id) {
         const query = {
-            text: 'SELECT username, email, gender, age, front_name, last_name FROM users WHERE id = $1',
+            text: 'SELECT id, username, email, gender, age, front_name, last_name FROM users WHERE id = $1',
             values: [id],
         }
         const result = await this.pool.query(query);

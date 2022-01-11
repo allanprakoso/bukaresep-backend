@@ -301,7 +301,7 @@ class RecipesService {
         const qLevel = 'AND level_id=' + level + ' ';
         const qCooking = 'AND cooking_time<=' + time + ' ';
         if (category !== undefined) addtionalQuery += qCategory;
-        if (level !== undefined) addaddtionalQuery += qLevel;
+        if (level !== undefined) addtionalQuery += qLevel;
         if (time !== undefined) addtionalQuery += qCooking;
 
         const query = {

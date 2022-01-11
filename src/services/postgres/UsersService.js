@@ -51,10 +51,10 @@ class UsersService {
         return result.rows[0].id;
     }
 
-    async updateUser(id, { username, email, gender, age, front_name, last_name }) {
+    async updateUser(id, { username, email, gender, age, front_name, last_name, url_image }) {
         const query = {
-            text: 'UPDATE users SET username = $1, email= $2, gender = $3, age= $4, front_name= $5, last_name = $6 WHERE id = $7',
-            values: [username, email, gender, age, front_name, last_name, id],
+            text: 'UPDATE users SET username = $1, email= $2, gender = $3, age= $4, front_name= $5, last_name = $6, url_image=$8 WHERE id = $7',
+            values: [username, email, gender, age, front_name, last_name, id, url_image],
         }
         const result = await this.pool.query(query);
         if (!result.rowCount) {

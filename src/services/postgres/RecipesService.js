@@ -285,9 +285,9 @@ class RecipesService {
     //? Recipe User
 
     async getRecipesUsers({ page = 1 }) {
-        const limit = 10;
+        const limit = 20;
         const query = {
-            text: 'SELECT recipes.id, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories .id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE status=\'published\' ORDER BY created_at DESC LIMIT $1 OFFSET $2',
+            text: 'SELECT recipes.id, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories.id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE status=\'published\' ORDER BY created_at ASC LIMIT $1 OFFSET $2',
             values: [limit, (page - 1) * limit],
         };
         const result = await this._pool.query(query);
@@ -309,7 +309,7 @@ class RecipesService {
         if (time !== undefined) addtionalQuery += qCooking;
 
         const query = {
-            text: `SELECT * FROM recipes WHERE name ILIKE '%' || $1 || '%' ${addtionalQuery}`,
+            text: `SELECT recipes.id, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories.id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE name ILIKE '%' || $1 || '%' ${addtionalQuery}`,
             values: [keyword],
         };
         const result = await this._pool.query(query);

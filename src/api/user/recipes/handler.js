@@ -24,7 +24,7 @@ class RecipeHandler {
         response.code(200);
         return response;
     }
-    async filteringRecipesHandler(request, h) { 
+    async filteringRecipesHandler(request, h) {
         const recipes = await this.service.userFilteringRecipe(request.query);
         const response = h.response({
             status: 'success',

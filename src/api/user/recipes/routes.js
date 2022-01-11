@@ -10,7 +10,7 @@ const routes = (handler) => [
         handler: handler.getRecipeByIdHandler
     },
     {
-        method: 'POST',
+        method: 'GET',
         path: '/recipes/search',
         handler: handler.filteringRecipesHandler
     }

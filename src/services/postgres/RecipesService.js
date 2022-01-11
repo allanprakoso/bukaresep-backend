@@ -309,8 +309,8 @@ class RecipesService {
         if (time !== undefined) addtionalQuery += qCooking;
 
         const query = {
-            text: `SELECT * FROM recipes WHERE name ILIKE '%' || $2 || '%' ${addtionalQuery}`,
-            values: [creator_id, keyword],
+            text: `SELECT * FROM recipes WHERE name ILIKE '%' || $1 || '%' ${addtionalQuery}`,
+            values: [keyword],
         };
         const result = await this._pool.query(query);
         return result.rows;

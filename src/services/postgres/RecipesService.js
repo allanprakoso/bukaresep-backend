@@ -301,12 +301,11 @@ class RecipesService {
         const qLevel = 'AND level_id=' + level + ' ';
         const qCooking = 'AND cooking_time<=' + time + ' ';
         if (category !== undefined) addtionalQuery += qCategory;
-        if (cuisine !== undefined) addtionalQuery += qCuisine;
         if (level !== undefined) addaddtionalQuery += qLevel;
         if (time !== undefined) addtionalQuery += qCooking;
 
         const query = {
-            text: `SELECT recipes.id, cooking_time, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories.id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE recipes.name ILIKE '%' || $1 || '%' ${addtionalQuery}`,
+            text: `SELECT recipes.id, cooking_time, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories.id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE recipes.name ILIKE '%' || $1 || '%' ${addtionalQuery}`,
             values: [keyword],
         };
         const result = await this._pool.query(query);

@@ -264,13 +264,12 @@ class RecipesService {
         await this._pool.query(query);
     }
 
-    async filteringRecipe(creator_id, { keyword, category, cuisine, level, time }) {
+    async filteringRecipe(creator_id, { keyword, category, level, time }) {
         var addtionalQuery = '';
         const qCategory = ' AND category_id=' + category + ' ';
         const qLevel = 'AND level_id=' + level + ' ';
         const qCooking = 'AND cooking_time<=' + time + ' ';
         if (category !== undefined) addtionalQuery += qCategory;
-        if (cuisine !== undefined) addtionalQuery += qCuisine;
         if (level !== undefined) addaddtionalQuery += qLevel;
         if (time !== undefined) addtionalQuery += qCooking;
 

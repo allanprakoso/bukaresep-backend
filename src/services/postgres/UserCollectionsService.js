@@ -62,10 +62,10 @@ class UserCollectionService {
 
     async getCollections(user_id) {
         const query = {
-            text: 'SELECT t.id ,t.collection AS name, (SELECT ARRAY (SELECT url_image from items_user_collection INNER JOIN recipes ON recipe_id = recipes.id WHERE user_collection_id=t.id LIMIT 3)) AS images, array_agg(t.category) AS categories, array_agg(t.row_count) count FROM (SELECT user_collections.id, user_collections.name as collection, categories.name as category, COUNT(recipes.id) AS row_count FROM user_collections INNER JOIN items_user_collection ON user_collection_id = user_collections.id INNER JOIN recipes ON recipes.id = recipe_id INNER JOIN categories ON category_id = categories.id WHERE user_collections.user_id=$1 GROUP BY collection, category, user_collections.id) t GROUP BY t.collection, t.id',
+            text: 'SELECT t.id, t.collection AS name, (SELECT ARRAY (SELECT url_image from items_user_collection INNER JOIN recipes ON recipe_id = recipes.id WHERE user_collection_id=t.id LIMIT 3)) AS images, array_agg(t.category) AS categories, array_agg(t.row_count) count FROM (SELECT user_collections.id, user_collections.name as collection, categories.name as category, COUNT(recipes.id) AS row_count FROM user_collections INNER JOIN items_user_collection ON user_collection_id = user_collections.id INNER JOIN recipes ON recipes.id = recipe_id INNER JOIN categories ON category_id = categories.id WHERE user_collections.user_id=$1 GROUP BY collection, category, user_collections.id) t GROUP BY t.collection, t.id',
             values: [user_id],
         };
-
+        const result = await this._pool.query(query);
         const collectionModel = ({ id, name, images }, categories) => ({
             id, name, images, categories
         });

@@ -54,11 +54,11 @@ class CreatorsService {
   }
 
   async updateCreator(id, {
-    username, email, gender, age, front_name, last_name,
+    username, email, gender, age, front_name, last_name, url_image
   }) {
     const query = {
-      text: 'UPDATE creators SET username = $1, email= $2, gender = $3, age= $4, front_name= $5, last_name = $6 WHERE id = $7',
-      values: [username, email, gender, age, front_name, last_name, id],
+      text: 'UPDATE creators SET username = $1, email= $2, gender = $3, age= $4, url_image=$8, front_name= $5, last_name = $6 WHERE id = $7',
+      values: [username, email, gender, age, front_name, last_name, id, url_image],
     };
 
     const result = await this._pool.query(query);

@@ -42,7 +42,7 @@ class CollectionsHandler {
     async deleteCollectionHandler(request, h) {
         const { id: credentialId } = request.auth.credentials;
         const collection_id = request.params.id;
-        await this.service.deleteCollection({ collection_id, credentialId });
+        await this.service.deleteCollection(collection_id, credentialId);
         const response = h.response({
             status: 'success',
             message: 'collection deleted successfully',

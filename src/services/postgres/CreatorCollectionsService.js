@@ -93,7 +93,7 @@ class CreatorCollectionService {
         return result.rows;
     }
 
-    async deleteCollection({ collection_id, creator_id }) {
+    async deleteCollection(collection_id, creator_id) {
         await this.verifyCollectionsOwner({ creator_id, collection_id });
         const query = {
             text: 'DELETE FROM creator_collections WHERE id = $1',

@@ -32,7 +32,6 @@ class CollectionsHandler {
     }
 
     async getCollectionByIdHandler(request, h) {
-        const { id: credentialId } = request.auth.credentials;
         const collection = await this.service.getCollectionById(request.params.id);
         const response = h.response({ collection });
         response.code(200);

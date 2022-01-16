@@ -285,7 +285,7 @@ class RecipesService {
     async getRecipesUsers({ page = 1 }) {
         const limit = 20;
         const query = {
-            text: 'SELECT recipes.id, (SELECT ROUND(AVG(rating),2) from ratings WHERE recipe_id = recipes.id) as rating, cooking_time, level_id, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories.id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE status=\'published\' ORDER BY created_at ASC LIMIT $1 OFFSET $2',
+            text: 'SELECT recipes.id, (SELECT ROUND(AVG(rating),1) from ratings WHERE recipe_id = recipes.id) as rating, cooking_time, level_id, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories.id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE status=\'published\' ORDER BY created_at ASC LIMIT $1 OFFSET $2',
             values: [limit, (page - 1) * limit],
         };
         const result = await this._pool.query(query);

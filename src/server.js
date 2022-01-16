@@ -18,6 +18,9 @@ const creatorsValidator = require('./validator/creators');
 const users = require('./api/user/accounts');
 const UsersService = require('./services/postgres/UsersService');
 
+const ratings = require('./api/user/ratings');
+const RatingsService = require('./services/postgres/RatingsService');
+
 const cuisines = require('./api/admin/cuisines');
 const CuisinesService = require('./services/postgres/CuisinesService');
 
@@ -69,6 +72,7 @@ const init = async () => {
   const userAuthenticationsService = new UserAuthenticationsService();
   const usersService = new UsersService();
   const userCollectionService = new UserCollectionService();
+  const ratingsService = new RatingsService();
 
   // ? ADMIN
   const cuisinesService = new CuisinesService();
@@ -151,6 +155,12 @@ const init = async () => {
         authenticationsService: creatorAuthenticationsService,
         creatorsService: creatorsService,
         tokenManager: TokenManagerCreator,
+      }
+    },
+    {
+      plugin: ratings,
+      options: {
+        service: ratingsService
       }
     },
     {

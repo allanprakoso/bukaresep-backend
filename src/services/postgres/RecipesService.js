@@ -121,7 +121,7 @@ class RecipesService {
 
     async getRecipesPagination(creator_id) {
         const query = {
-            text: 'SELECT recipes.id, (SELECT AVG(rating) from ratings WHERE recipe_id = recipes.id) as rating, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories.id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE creator_id = $1 AND status=\'published\' ORDER BY created_at DESC',
+            text: 'SELECT recipes.id, (SELECT ROUND(AVG(rating),1) from ratings WHERE recipe_id = recipes.id) as rating, recipes.name AS name, recipes.url_image AS image, creators.username AS creator, categories.name AS category, levels.name AS level, cuisines.name AS cuisine, created_at, updated_at FROM recipes  INNER JOIN categories ON recipes.category_id=categories.id INNER JOIN cuisines ON recipes.cuisine_id=cuisines.id INNER JOIN levels ON recipes.level_id=levels.id INNER JOIN creators ON recipes.creator_id=creators.id WHERE creator_id = $1 AND status=\'published\' ORDER BY created_at DESC',
             values: [creator_id],
         };
         const result = await this._pool.query(query);
@@ -149,7 +149,7 @@ class RecipesService {
         });
 
         const query = {
-            text: 'SELECT  category_id, cuisine_id, level_id, recipes.id as id,(SELECT AVG(rating) from ratings WHERE recipe_id = recipes.id) as rating, recipes.name as name, recipes.url_image as url_image, cooking_time, serving, created_at, updated_at, status, creators.username as creator FROM recipes INNER JOIN creators ON recipes.creator_id = creators.id WHERE recipes.id = $1',
+            text: 'SELECT  category_id, cuisine_id, level_id, recipes.id as id,(SELECT ROUND(AVG(rating),1) from ratings WHERE recipe_id = recipes.id) as rating, recipes.name as name, recipes.url_image as url_image, cooking_time, serving, created_at, updated_at, status, creators.username as creator FROM recipes INNER JOIN creators ON recipes.creator_id = creators.id WHERE recipes.id = $1',
             values: [id],
         };
         const result = await this._pool.query(query);

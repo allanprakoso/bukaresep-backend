@@ -144,12 +144,12 @@ class RecipesService {
     }
 
     async getRecipeById(id) {
-        const recipeDetails = ({ id, name, url_image, cooking_time, serving, created_at, updated_at, status, creator }, group_ingredients, instructions, category, cuisine, level, tags) => ({
-            id, name, url_image, created_at, creator, updated_at, status, group_ingredients, instructions, cooking_time, serving, category, cuisine, level, tags
+        const recipeDetails = ({ id, name, url_image, cooking_time, serving, created_at, updated_at, status, creator, rating }, group_ingredients, instructions, category, cuisine, level, tags) => ({
+            id, name, url_image, rating, created_at, creator, updated_at, status, group_ingredients, instructions, cooking_time, serving, category, cuisine, level, tags
         });
 
         const query = {
-            text: 'SELECT category_id, cuisine_id, level_id, recipes.id as id, recipes.name as name, recipes.url_image as url_image, cooking_time, serving, created_at, updated_at, status, creators.username as creator FROM recipes INNER JOIN creators ON recipes.creator_id = creators.id WHERE recipes.id = $1',
+            text: 'SELECT  category_id, cuisine_id, level_id, recipes.id as id,(SELECT AVG(rating) from ratings WHERE recipe_id = recipes.id) as rating, recipes.name as name, recipes.url_image as url_image, cooking_time, serving, created_at, updated_at, status, creators.username as creator FROM recipes INNER JOIN creators ON recipes.creator_id = creators.id WHERE recipes.id = $1',
             values: [id],
         };
         const result = await this._pool.query(query);
